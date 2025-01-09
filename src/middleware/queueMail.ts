@@ -1,21 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
-import mailQueue from '../services/mailingService';
+import { mailService, MailOptions } from '../services/mailingService';
 
-const queueMail = (req: any, res: any, next: NextFunction) => {
-  req.queueMail = async (mailOptions: object) => {
+const sendMail = (req: any, res: any, next: NextFunction) => {
+  req.queueMail = async (mailOptions: MailOptions) => {
     try {
-      const job = await mailQueue.add('sendMail', { mailOptions }, { 
-        removeOnComplete: { age: 300 }, 
-        removeOnFail: { age: 300 } 
-      });
-      console.log('Job added to queue:', job.id);
-      return job;
+      const result = await mailService.sendMail(mailOptions);
+      console.log('Email sent:', result.messageId);
+      return result;
     } catch (error) {
-      console.error('Error adding job to queue:', error);
+      console.error('Error sending email:', error);
       throw error;
     }
   };
   next();
 };
 
-export default queueMail;
+export default sendMail;

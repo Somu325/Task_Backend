@@ -4,7 +4,7 @@ import Role from '../db/models/Tbl_Role';
 import { authenticateManager } from '../middleware/authenticateManager';
 import { Op } from 'sequelize';
 import bcrypt from 'bcrypt';
-import queueMail from '../middleware/queueMail';
+import sendMail from '../middleware/queueMail';
 
 const employeeRoutes = express.Router();
 
@@ -143,7 +143,7 @@ employeeRoutes.get('/role/:roleId', async (req: Request, res: Response) => {
 
 //post API
 
-employeeRoutes.post('/post', authenticateManager, queueMail, async (req: any, res: any) => {
+employeeRoutes.post('/post', authenticateManager, sendMail, async (req: any, res: any) => {
     const { Employee_name, email, password } = req.body;
   
     try {
